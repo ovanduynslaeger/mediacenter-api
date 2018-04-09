@@ -1,0 +1,9 @@
+description "MediaCenter Api"
+author  "Olivier Vanduynslaeger <o.vanduynslaeger@gmail.com>"
+
+start on runlevel [234]
+stop on runlevel [0156]
+
+chdir /home/jarvis-mc
+exec /home/jarvis-mc/mediacenter-api.py
+respawn
