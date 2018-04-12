@@ -1,23 +1,23 @@
-#!flask/bin/python
+#!/usr/bin/python
 import os;
 from flask import Flask, jsonify
-from subprocess import call
+from subprocess import Popen
 
 app = Flask(__name__)
 
 @app.route('/mediacenter/<string:cmd>', methods=['GET'])
 def mediaCenter(cmd):
-    os.environ['DISPLAY'] = ":0.0"
     if cmd == 'start':
-        ret = callMethod('mediacenter/'+cmd,['ls', '-l'])
-        return ret
-    if cmd == 'stop':
-        ret = callMethod('mediacenter/'+cmd,['ls', '-l'])
+        ret = callMethod('mediacenter/'+cmd,'/usr/bin/kodi')
         return ret
 
 def callMethod(api,method):
-    try:    
-        ret = call(method)
+    #newenv = dict(os.environ)
+    #newenv['DISPLAY']=':0'
+    #os.environ['DISPLAY'] = ":0"
+    try:
+        Popen(method)
+        ret = Popen.returncode
         if ret != 0:
          if ret < 0:
              return jsonify({'api': api, 'return': {'status': 'err', 'code': -ret, 'message': 'Killed by signal'}})
@@ -31,4 +31,5 @@ def callMethod(api,method):
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
 
-    
+
+
